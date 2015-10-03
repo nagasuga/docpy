@@ -19,18 +19,13 @@ def parse(func):
 def parse_parameters(func):
     """Parse and returns a list of dict about the parameters of func."""
     params = []
-    argspec = inspect.getargspec(func)
-    kwargs_start_idx = len(argspec.args) - len(argspec.defaults)
-    kwarg_idx = 0
-    for idx, arg_name in enumerate(argspec.args):
-        param = {'name': arg_name}
-        if idx < kwargs_start_idx:
-            param['type'] = 'arg'
-        else:
-            param['type'] = 'kwarg'
-            param['default'] = argspec.defaults[kwarg_idx]
-            kwarg_idx += 1
-
+    for parameter in inspect.signature(func).parameters.values():
+        param = {
+            'name': parameter.name,
+            'type': 'arg' if parameter.default is parameter.empty else 'kwarg',
+        }
+        if parameter.default != parameter.empty:
+            param['default'] = parameter.default
         params.append(param)
     return params
 
