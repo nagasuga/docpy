@@ -18,11 +18,13 @@ def parse(func):
     docstring = parse_docstring(docstring=func.__doc__)
 
     for param in result['params']:
-        if not docstring['yaml'] or 'args' not in docstring['yaml']:
-            break
-
-        if param['_name'] in docstring['yaml']['args']:
+        if param['_name'] in docstring['yaml'].get('args', {}):
             param.update(docstring['yaml']['args'][param['_name']])
+
+    if 'args' in docstring['yaml']:
+        del docstring['yaml']['args']
+
+    result['extra'] = docstring['yaml']
     result.update(docstring)
     return result
 
@@ -32,7 +34,7 @@ def parse_docstring(docstring):
     result = {
         'summary': None,
         'description': None,
-        'yaml': None,
+        'yaml': {},
     }
 
     if not docstring:

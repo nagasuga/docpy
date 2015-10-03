@@ -43,6 +43,15 @@ class ParseTest(TestCase):
                       {'_default': 'one', '_type': 'kwarg', '_name': 'kwargs1'},
                       {'_default': None, '_type': 'kwarg', '_name': 'kwargs2', 'type': 'list', 'description': 'list of testing things.'}]
         self.assertEqual(res['params'], exp_params)
+        exp_extra = {
+            'date': date(2015, 10, 10),
+            'user': {
+                'first': 'Jeff',
+                'last': 'Nagasuga',
+            },
+            'id': 12345,
+        }
+        self.assertEqual(res['extra'], exp_extra)
 
     def test_yaml_with_unknown_arg(self):
         res = docpy.parser.parse(func_with_yaml_2)
@@ -83,6 +92,8 @@ class ParseDocstringTest(TestCase):
         res = docpy.parser.parse_docstring(docstring=docstring)
         self.assertEqual(res['summary'], summary)
         self.assertEqual(res['description'], description)
+        if yaml is None:
+            yaml = {}
         self.assertEqual(res['yaml'], yaml)
 
     def test_no_docstring(self):
