@@ -6,6 +6,7 @@ setup(
     packages=['docpy'],
     install_requires=[
         'jinja2',
+        'pyyaml',
     ],
     dependency_links=[],
     description='Python documentation generator using docstrings',
