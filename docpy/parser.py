@@ -18,6 +18,33 @@ def parse(func):
     return result
 
 
+def parse_docstring(docstring):
+    """Parse and return various information from the docstring."""
+    result = {
+        'summary': None,
+        'description': None,
+    }
+
+    if not docstring:
+        return result
+
+    paragraphs = docstring.split('\n\n')
+    summary = re.sub('[ ]*\n[ ]*', ' ', paragraphs[0]).strip()
+    result['summary'] = summary
+
+    description = None
+    desc_paragraphs = []
+    for paragraph in paragraphs[1:]:
+        desc = re.sub('[ ]*\n[ ]*', ' ', paragraph).strip()
+        desc_paragraphs.append(desc)
+
+    if desc_paragraphs:
+        description = '\n\n'.join(desc_paragraphs)
+    result['description'] = description
+
+    return result
+
+
 def parse_parameters_py3(func):
     """Parse and returns a list of dict about the parameters of func."""
     params = []
@@ -51,33 +78,6 @@ def parse_parameters_py2(func):
 
         params.append(param)
     return params
-
-
-def parse_docstring(docstring):
-    """Parse and return various information from the docstring."""
-    result = {
-        'summary': None,
-        'description': None,
-    }
-
-    if not docstring:
-        return result
-
-    paragraphs = docstring.split('\n\n')
-    summary = re.sub('[ ]*\n[ ]*', ' ', paragraphs[0]).strip()
-    result['summary'] = summary
-
-    description = None
-    desc_paragraphs = []
-    for paragraph in paragraphs[1:]:
-        desc = re.sub('[ ]*\n[ ]*', ' ', paragraph).strip()
-        desc_paragraphs.append(desc)
-
-    if desc_paragraphs:
-        description = '\n\n'.join(desc_paragraphs)
-    result['description'] = description
-
-    return result
 
 
 if sys.version_info < (3, 3):
