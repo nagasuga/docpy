@@ -1,6 +1,7 @@
 import inspect
 import re
 import sys
+import yaml
 
 
 def parse(func):
@@ -23,25 +24,37 @@ def parse_docstring(docstring):
     result = {
         'summary': None,
         'description': None,
+        'yaml': None,
     }
 
     if not docstring:
         return result
 
     paragraphs = docstring.split('\n\n')
-    summary = re.sub('[ ]*\n[ ]*', ' ', paragraphs[0]).strip()
-    result['summary'] = summary
 
     description = None
     desc_paragraphs = []
-    for paragraph in paragraphs[1:]:
-        desc = re.sub('[ ]*\n[ ]*', ' ', paragraph).strip()
-        desc_paragraphs.append(desc)
+    found_yaml = False
+    count = 0
+    for paragraph in paragraphs:
+        if paragraph.startswith('---'):
+            found_yaml = True
+            break
+        elif count == 0:
+            summary = re.sub('[ ]*\n[ ]*', ' ', paragraphs[0]).strip()
+            result['summary'] = summary
+        else:
+            desc = re.sub('[ ]*\n[ ]*', ' ', paragraph).strip()
+            desc_paragraphs.append(desc)
+        count += 1
+
+    if found_yaml:
+        raw_yaml = '\n'.join(paragraphs[count:])
+        result['yaml'] = yaml.load(raw_yaml, Loader=yaml.Loader)
 
     if desc_paragraphs:
         description = '\n\n'.join(desc_paragraphs)
     result['description'] = description
-
     return result
 
 

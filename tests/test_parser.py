@@ -1,4 +1,7 @@
+from datetime import date
 from unittest import TestCase
+
+import yaml
 
 import docpy.parser
 from .samples import sample
@@ -24,18 +27,25 @@ class ParseTest(TestCase):
 
 class ParseDocstringTest(TestCase):
     @staticmethod
-    def generate_docstring(summary=None, description=None):
+    def generate_docstring(summary=None, description=None, raw_yaml=None):
         docstring = ''
         if summary:
             docstring = """{}""".format(summary)
         if description:
-            docstring += '\n\n{}'.format(description)
+            if docstring:
+                docstring += '\n\n'
+            docstring += '{}'.format(description)
+        if raw_yaml:
+            if docstring:
+                docstring += '\n\n'
+            docstring += '{}'.format(raw_yaml)
         return docstring
 
-    def assert_parse(self, docstring, summary, description):
+    def assert_parse(self, docstring, summary, description, yaml=None):
         res = docpy.parser.parse_docstring(docstring=docstring)
         self.assertEqual(res['summary'], summary)
         self.assertEqual(res['description'], description)
+        self.assertEqual(res['yaml'], yaml)
 
     def test_no_docstring(self):
         docstring = self.generate_docstring()
@@ -107,3 +117,25 @@ class ParseDocstringTest(TestCase):
                     'multiple paragraphs to make things a bit more '
                     'interesting...')
         self.assert_parse(docstring, summary=exp_summary, description=exp_desc)
+
+    def test_only_yaml(self):
+        raw_yaml = """---
+                      args:
+                          arg1:
+                              type: int
+                              description: test argument (first).
+                          arg2:
+                              type: string
+                              description: test argument (second).
+                          kwarg2:
+                              type: list
+                              description: list of testing things.
+                      date: 2015-10-10
+                      user:
+                          first: Jeff
+                          last: Nagasuga
+                      id: 12345
+                   """
+        docstring = self.generate_docstring(raw_yaml=raw_yaml)
+        exp_yaml = yaml.load(raw_yaml, Loader=yaml.Loader)
+        self.assert_parse(docstring, summary=None, description=None, yaml=exp_yaml)
