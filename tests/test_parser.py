@@ -4,24 +4,62 @@ from unittest import TestCase
 import yaml
 
 import docpy.parser
-from .samples import sample
+from .samples import sample, func_with_yaml, func_with_yaml_2
 
 
 class ParseTest(TestCase):
     def test_simple(self):
         res = docpy.parser.parse(sample)
         self.assertEqual(res['name'], 'sample')
-        self.assertEqual(res['summary'], 'This is sample docstring.')
+        exp_summary = ('This is sample docstring that is long that will go '
+                       'multiline and continues here and ... on and on.')
+        self.assertEqual(res['summary'], exp_summary)
         exp_desc = ('This is the detail information about this function. '
                     'This could be pretty long and span multiline/multi '
                     'paragraph.\n\nContinuing the detail information about '
                     'this function. Combine with the above paragraph for '
                     'full explanation of what this function is.')
         self.assertEqual(res['description'], exp_desc)
-        exp_params = [{'type': 'arg', 'name': 'arg1'},
-                      {'type': 'arg', 'name': 'arg2'},
-                      {'default': 'one', 'type': 'kwarg', 'name': 'kwargs1'},
-                      {'default': None, 'type': 'kwarg', 'name': 'kwargs2'}]
+        exp_params = [{'_type': 'arg', '_name': 'arg1'},
+                      {'_type': 'arg', '_name': 'arg2'},
+                      {'_default': 'one', '_type': 'kwarg', '_name': 'kwargs1'},
+                      {'_default': None, '_type': 'kwarg', '_name': 'kwargs2'}]
+        self.assertEqual(res['params'], exp_params)
+
+    def test_yaml(self):
+        res = docpy.parser.parse(func_with_yaml)
+        self.assertEqual(res['name'], 'func_with_yaml')
+        exp_summary = ('This is sample docstring that is long that will go '
+                       'multiline and continues here and ... on and on.')
+        self.assertEqual(res['summary'], exp_summary)
+        exp_desc = ('This is the detail information about this function. '
+                    'This could be pretty long and span multiline/multi '
+                    'paragraph.\n\nContinuing the detail information about '
+                    'this function. Combine with the above paragraph for '
+                    'full explanation of what this function is.')
+        self.assertEqual(res['description'], exp_desc)
+        exp_params = [{'_type': 'arg', '_name': 'arg1', 'type': 'int', 'description': 'test argument (first).'},
+                      {'_type': 'arg', '_name': 'arg2', 'type': 'string', 'description': 'test argument (second).'},
+                      {'_default': 'one', '_type': 'kwarg', '_name': 'kwargs1'},
+                      {'_default': None, '_type': 'kwarg', '_name': 'kwargs2', 'type': 'list', 'description': 'list of testing things.'}]
+        self.assertEqual(res['params'], exp_params)
+
+    def test_yaml_with_unknown_arg(self):
+        res = docpy.parser.parse(func_with_yaml_2)
+        self.assertEqual(res['name'], 'func_with_yaml_2')
+        exp_summary = ('This is sample docstring that is long that will go '
+                       'multiline and continues here and ... on and on.')
+        self.assertEqual(res['summary'], exp_summary)
+        exp_desc = ('This is the detail information about this function. '
+                    'This could be pretty long and span multiline/multi '
+                    'paragraph.\n\nContinuing the detail information about '
+                    'this function. Combine with the above paragraph for '
+                    'full explanation of what this function is.')
+        self.assertEqual(res['description'], exp_desc)
+        exp_params = [{'_type': 'arg', '_name': 'arg1', 'type': 'int', 'description': 'test argument (first).'},
+                      {'_type': 'arg', '_name': 'arg2', 'type': 'string', 'description': 'test argument (second).'},
+                      {'_default': 'one', '_type': 'kwarg', '_name': 'kwargs1'},
+                      {'_default': None, '_type': 'kwarg', '_name': 'kwargs2', 'type': 'list', 'description': 'list of testing things.'}]
         self.assertEqual(res['params'], exp_params)
 
 
@@ -139,3 +177,90 @@ class ParseDocstringTest(TestCase):
         docstring = self.generate_docstring(raw_yaml=raw_yaml)
         exp_yaml = yaml.load(raw_yaml, Loader=yaml.Loader)
         self.assert_parse(docstring, summary=None, description=None, yaml=exp_yaml)
+
+    def test_simple_summary_with_yaml(self):
+        summary = 'This is simple docstring.'
+        raw_yaml = """---
+                      args:
+                          arg1:
+                              type: int
+                              description: test argument (first).
+                          arg2:
+                              type: string
+                              description: test argument (second).
+                          kwarg2:
+                              type: list
+                              description: list of testing things.
+                      date: 2015-10-10
+                      user:
+                          first: Jeff
+                          last: Nagasuga
+                      id: 12345
+                   """
+        docstring = self.generate_docstring(summary=summary, raw_yaml=raw_yaml)
+        exp_yaml = yaml.load(raw_yaml, Loader=yaml.Loader)
+        self.assert_parse(docstring, summary=summary, description=None,
+                          yaml=exp_yaml)
+
+    def test_simple_summary_simple_description_with_yaml(self):
+        summary = 'This is simple docstring.'
+        description = 'This is simple description.'
+        raw_yaml = """---
+                      args:
+                          arg1:
+                              type: int
+                              description: test argument (first).
+                          arg2:
+                              type: string
+                              description: test argument (second).
+                          kwarg2:
+                              type: list
+                              description: list of testing things.
+                      date: 2015-10-10
+                      user:
+                          first: Jeff
+                          last: Nagasuga
+                      id: 12345
+                   """
+        docstring = self.generate_docstring(summary=summary,
+                                            description=description,
+                                            raw_yaml=raw_yaml)
+        exp_yaml = yaml.load(raw_yaml, Loader=yaml.Loader)
+        self.assert_parse(docstring, summary=summary, description=description,
+                          yaml=exp_yaml)
+
+    def test_simple_summary_multiparagraph_description_with_yaml(self):
+        summary = 'This is simple docstring.'
+        description = """This is simple description. This description will
+                      span over multiple lines.
+
+                      Also, this description will have multiple paragraphs
+                      to make things a bit more interesting...
+                      """
+        raw_yaml = """---
+                      args:
+                          arg1:
+                              type: int
+                              description: test argument (first).
+                          arg2:
+                              type: string
+                              description: test argument (second).
+                          kwarg2:
+                              type: list
+                              description: list of testing things.
+                      date: 2015-10-10
+                      user:
+                          first: Jeff
+                          last: Nagasuga
+                      id: 12345
+                   """
+        docstring = self.generate_docstring(summary=summary,
+                                            description=description,
+                                            raw_yaml=raw_yaml)
+        exp_desc = ('This is simple description. This description will span '
+                    'over multiple lines.\n\nAlso, this description will have '
+                    'multiple paragraphs to make things a bit more '
+                    'interesting...')
+        exp_yaml = yaml.load(raw_yaml, Loader=yaml.Loader)
+        self.assert_parse(docstring, summary=summary, description=exp_desc,
+                          yaml=exp_yaml)

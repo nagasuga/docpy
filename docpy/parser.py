@@ -1,6 +1,7 @@
 import inspect
 import re
 import sys
+import textwrap
 import yaml
 
 
@@ -15,6 +16,13 @@ def parse(func):
         'params': parse_parameters(func),
     }
     docstring = parse_docstring(docstring=func.__doc__)
+
+    for param in result['params']:
+        if not docstring['yaml'] or 'args' not in docstring['yaml']:
+            break
+
+        if param['_name'] in docstring['yaml']['args']:
+            param.update(docstring['yaml']['args'][param['_name']])
     result.update(docstring)
     return result
 
@@ -37,7 +45,7 @@ def parse_docstring(docstring):
     found_yaml = False
     count = 0
     for paragraph in paragraphs:
-        if paragraph.startswith('---'):
+        if re.match(r'^\s*---', paragraph):
             found_yaml = True
             break
         elif count == 0:
@@ -50,6 +58,10 @@ def parse_docstring(docstring):
 
     if found_yaml:
         raw_yaml = '\n'.join(paragraphs[count:])
+        raw_yaml = ''
+        for paragraph in paragraphs[count:]:
+            raw_yaml += textwrap.dedent(paragraph) + '\n'
+        indent_count = 0
         result['yaml'] = yaml.load(raw_yaml, Loader=yaml.Loader)
 
     if desc_paragraphs:
@@ -63,11 +75,11 @@ def parse_parameters_py3(func):
     params = []
     for parameter in inspect.signature(func).parameters.values():
         param = {
-            'name': parameter.name,
-            'type': 'arg' if parameter.default is parameter.empty else 'kwarg',
+            '_name': parameter.name,
+            '_type': 'arg' if parameter.default is parameter.empty else 'kwarg',
         }
         if parameter.default != parameter.empty:
-            param['default'] = parameter.default
+            param['_default'] = parameter.default
         params.append(param)
     return params
 
@@ -81,12 +93,12 @@ def parse_parameters_py2(func):
     kwargs_start_idx = len(argspec.args) - len(argspec.defaults)
     kwarg_idx = 0
     for idx, arg_name in enumerate(argspec.args):
-        param = {'name': arg_name}
+        param = {'_name': arg_name}
         if idx < kwargs_start_idx:
-            param['type'] = 'arg'
+            param['_type'] = 'arg'
         else:
-            param['type'] = 'kwarg'
-            param['default'] = argspec.defaults[kwarg_idx]
+            param['_type'] = 'kwarg'
+            param['_default'] = argspec.defaults[kwarg_idx]
             kwarg_idx += 1
 
         params.append(param)
