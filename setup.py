@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='docpy',
-    version='0.1.0',
+    version='0.1.1',
     packages=['docpy'],
     install_requires=[
         'jinja2',

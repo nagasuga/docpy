@@ -38,10 +38,10 @@ class ParseTest(TestCase):
                     'this function. Combine with the above paragraph for '
                     'full explanation of what this function is.')
         self.assertEqual(res['description'], exp_desc)
-        exp_params = [{'_type': 'arg', '_name': 'arg1', 'type': 'int', 'description': 'test argument (first).'},
-                      {'_type': 'arg', '_name': 'arg2', 'type': 'string', 'description': 'test argument (second).'},
+        exp_params = [{'_type': 'arg', '_name': 'arg1'},
+                      {'_type': 'arg', '_name': 'arg2'},
                       {'_default': 'one', '_type': 'kwarg', '_name': 'kwargs1'},
-                      {'_default': None, '_type': 'kwarg', '_name': 'kwargs2', 'type': 'list', 'description': 'list of testing things.'}]
+                      {'_default': None, '_type': 'kwarg', '_name': 'kwargs2'}]
         self.assertEqual(res['params'], exp_params)
         exp_extra = {
             'date': date(2015, 10, 10),
@@ -50,26 +50,22 @@ class ParseTest(TestCase):
                 'last': 'Nagasuga',
             },
             'id': 12345,
+            'args': {
+                'arg1': {
+                    'type': 'int',
+                    'description': 'test argument (first).',
+                },
+                'arg2': {
+                    'type': 'string',
+                    'description': 'test argument (second).',
+                },
+                'kwargs2': {
+                    'type': 'list',
+                    'description': 'list of testing things.',
+                },
+            },
         }
         self.assertEqual(res['extra'], exp_extra)
-
-    def test_yaml_with_unknown_arg(self):
-        res = docpy.parser.parse(func_with_yaml_2)
-        self.assertEqual(res['name'], 'func_with_yaml_2')
-        exp_summary = ('This is sample docstring that is long that will go '
-                       'multiline and continues here and ... on and on.')
-        self.assertEqual(res['summary'], exp_summary)
-        exp_desc = ('This is the detail information about this function. '
-                    'This could be pretty long and span multiline/multi '
-                    'paragraph.\n\nContinuing the detail information about '
-                    'this function. Combine with the above paragraph for '
-                    'full explanation of what this function is.')
-        self.assertEqual(res['description'], exp_desc)
-        exp_params = [{'_type': 'arg', '_name': 'arg1', 'type': 'int', 'description': 'test argument (first).'},
-                      {'_type': 'arg', '_name': 'arg2', 'type': 'string', 'description': 'test argument (second).'},
-                      {'_default': 'one', '_type': 'kwarg', '_name': 'kwargs1'},
-                      {'_default': None, '_type': 'kwarg', '_name': 'kwargs2', 'type': 'list', 'description': 'list of testing things.'}]
-        self.assertEqual(res['params'], exp_params)
 
 
 class ParseDocstringTest(TestCase):
