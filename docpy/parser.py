@@ -70,11 +70,11 @@ def parse_parameters_py3(func):
     params = []
     for parameter in inspect.signature(func).parameters.values():
         param = {
-            '_name': parameter.name,
-            '_type': 'arg' if parameter.default is parameter.empty else 'kwarg',
+            'name': parameter.name,
+            'type': 'arg' if parameter.default is parameter.empty else 'kwarg',
         }
         if parameter.default != parameter.empty:
-            param['_default'] = parameter.default
+            param['default'] = parameter.default
         params.append(param)
     return params
 
@@ -88,12 +88,12 @@ def parse_parameters_py2(func):
     kwargs_start_idx = len(argspec.args) - len(argspec.defaults)
     kwarg_idx = 0
     for idx, arg_name in enumerate(argspec.args):
-        param = {'_name': arg_name}
+        param = {'name': arg_name}
         if idx < kwargs_start_idx:
-            param['_type'] = 'arg'
+            param['type'] = 'arg'
         else:
-            param['_type'] = 'kwarg'
-            param['_default'] = argspec.defaults[kwarg_idx]
+            param['type'] = 'kwarg'
+            param['default'] = argspec.defaults[kwarg_idx]
             kwarg_idx += 1
 
         params.append(param)

@@ -20,10 +20,10 @@ class ParseTest(TestCase):
                     'this function. Combine with the above paragraph for '
                     'full explanation of what this function is.')
         self.assertEqual(res['description'], exp_desc)
-        exp_params = [{'_type': 'arg', '_name': 'arg1'},
-                      {'_type': 'arg', '_name': 'arg2'},
-                      {'_default': 'one', '_type': 'kwarg', '_name': 'kwargs1'},
-                      {'_default': None, '_type': 'kwarg', '_name': 'kwargs2'}]
+        exp_params = [{'type': 'arg', 'name': 'arg1'},
+                      {'type': 'arg', 'name': 'arg2'},
+                      {'default': 'one', 'type': 'kwarg', 'name': 'kwargs1'},
+                      {'default': None, 'type': 'kwarg', 'name': 'kwargs2'}]
         self.assertEqual(res['params'], exp_params)
 
     def test_yaml(self):
@@ -38,10 +38,10 @@ class ParseTest(TestCase):
                     'this function. Combine with the above paragraph for '
                     'full explanation of what this function is.')
         self.assertEqual(res['description'], exp_desc)
-        exp_params = [{'_type': 'arg', '_name': 'arg1'},
-                      {'_type': 'arg', '_name': 'arg2'},
-                      {'_default': 'one', '_type': 'kwarg', '_name': 'kwargs1'},
-                      {'_default': None, '_type': 'kwarg', '_name': 'kwargs2'}]
+        exp_params = [{'type': 'arg', 'name': 'arg1'},
+                      {'type': 'arg', 'name': 'arg2'},
+                      {'default': 'one', 'type': 'kwarg', 'name': 'kwargs1'},
+                      {'default': None, 'type': 'kwarg', 'name': 'kwargs2'}]
         self.assertEqual(res['params'], exp_params)
         exp_extra = {
             'date': date(2015, 10, 10),
