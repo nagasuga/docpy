@@ -44,16 +44,15 @@ Python documentation generator using docstrings
 2. Use docpy parser to extract information
 
     ```
-    import pprint
     import docpy.parser
-    pprint.pprint(docpy.parser.parse(sample))
+    data = docpy.parser.parse(sample)
     ```
 
 3. Result
 
     ```
     {
-        'description': 'This is the detail information about this function. ...',
+        'description': 'This is the detail information about this function. Th...",
         'extra': {
             'args': {
                 'arg1': {
@@ -78,14 +77,29 @@ Python documentation generator using docstrings
         },
         'name': 'sample',
         'params': [
-            {'_name': 'arg1', '_type': 'arg'},
-            {'_name': 'arg2', '_type': 'arg'},
-            {'_default': 'one', '_name': 'kwargs1', '_type': 'kwarg'},
-            {'_default': None, '_name': 'kwargs2', '_type': 'kwarg'}
+            {
+                'name': 'arg1',
+                'type': 'arg'
+            },
+            {
+                'name': 'arg2',
+                'type': 'arg'
+            },
+            {
+                'default': 'one',
+                'name': 'kwargs1',
+                'type': 'kwarg'
+            },
+            {
+                'default': None,
+                'name': 'kwargs2',
+                'type': 'kwarg'
+            }
         ],
         'raw': {
-            'docstring': 'This is sample docstring that is long that will ...',
-            'summary': 'This is sample docstring that is long that will go multiline and continues here and ... on and on.'
-        }
+            'docstring': 'This is sample docstring that is long that will go ...",
+        },
+        'summary': 'This is sample docstring that is long that will go multiline and continues here and ... on and on.'
+
     }
     ```
