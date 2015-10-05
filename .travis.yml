@@ -1,7 +1,7 @@
 python:
-  - 2.7
-  - 3.3
-  - nightly
+  - "2.7"
+  - "3.3"
+  - "nightly"
 install:
   - pip install pyyaml
   - pip install coveralls
