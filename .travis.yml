@@ -8,6 +8,6 @@ install:
   - sudo pip install pyyaml
   - sudo pip install coveralls
 script:
-  make test
+  make test.report
 after_success:
   coveralls
