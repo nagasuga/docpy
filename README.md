@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/nagasuga/docpy.png?branch=master)](https://travis-ci.org/nagasuga/docpy)
+[![Coverage](https://coveralls.io/repos/nagasuga/docpy/badge.svg?branch=master&service=github)](https://coveralls.io/repos/nagasuga/docpy)
 
 
 # docpy
