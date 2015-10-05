@@ -4,6 +4,7 @@ python:
   - "nightly"
 sudo: required
 install:
+  - sudo pip install pytest
   - sudo pip install pyyaml
   - sudo pip install coveralls
 script:
