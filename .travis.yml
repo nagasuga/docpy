@@ -4,8 +4,8 @@ python:
   - "nightly"
 sudo: required
 install:
-  - pip install pyyaml
-  - pip install coveralls
+  - sudo pip install pyyaml
+  - sudo pip install coveralls
 script:
   make test
 after_success:
