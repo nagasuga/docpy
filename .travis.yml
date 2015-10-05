@@ -1,12 +1,12 @@
+language: python
 python:
-  - "2.7"
-  - "3.3"
-  - "nightly"
-sudo: required
+  - 2.7
+  - 3.3
+  - nightly
 install:
-  - sudo pip install pytest
-  - sudo pip install pyyaml
-  - sudo pip install coveralls
+  - pip install pytest
+  - pip install pyyaml
+  - pip install coveralls
 script:
   make test.report
 after_success:
