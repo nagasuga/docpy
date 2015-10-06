@@ -8,14 +8,23 @@ import yaml
 def parse(func):
     """Returns parsed docstring in dict."""
 
+    obj_type = 'unknown'
+    if inspect.isfunction(func):
+        obj_type = 'function'
+    elif inspect.isclass(func):
+        obj_type = 'class'
+    elif inspect.ismethod(func):
+        obj_type = 'method'
+
     result = {
         'raw': {
             'docstring': func.__doc__,
         },
         'name': func.__name__,
         'params': parse_parameters(func),
+        'type': obj_type,
     }
-    docstring = parse_docstring(docstring=func.__doc__)
+    docstring = parse_docstring(docstring=inspect.getdoc(func))
     result['extra'] = docstring['yaml']
     del docstring['yaml']
     result.update(docstring)

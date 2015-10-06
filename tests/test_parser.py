@@ -5,13 +5,15 @@ import yaml
 
 import docpy.parser
 from .samples import (
-    sample, func_with_yaml, func_with_yaml_2, func_without_docstring)
+    sample, func_with_yaml, func_with_yaml_2, func_without_docstring,
+    SimpleClass)
 
 
 class ParseTest(TestCase):
     def test_simple(self):
         res = docpy.parser.parse(sample)
         self.assertEqual(res['name'], 'sample')
+        self.assertEqual(res['type'], 'function')
         exp_summary = ('This is sample docstring that is long that will go '
                        'multiline and continues here and ... on and on.')
         self.assertEqual(res['summary'], exp_summary)
@@ -30,6 +32,7 @@ class ParseTest(TestCase):
     def test_yaml(self):
         res = docpy.parser.parse(func_with_yaml)
         self.assertEqual(res['name'], 'func_with_yaml')
+        self.assertEqual(res['type'], 'function')
         exp_summary = ('This is sample docstring that is long that will go '
                        'multiline and continues here and ... on and on.')
         self.assertEqual(res['summary'], exp_summary)
@@ -71,6 +74,7 @@ class ParseTest(TestCase):
     def test_without_docstring(self):
         res = docpy.parser.parse(func_without_docstring)
         self.assertEqual(res['name'], 'func_without_docstring')
+        self.assertEqual(res['type'], 'function')
         self.assertEqual(res['summary'], '')
         self.assertEqual(res['description'], '')
         exp_params = [{'type': 'arg', 'name': 'arg1'},
@@ -78,6 +82,15 @@ class ParseTest(TestCase):
                       {'default': 'one', 'type': 'kwarg', 'name': 'kwargs1'},
                       {'default': None, 'type': 'kwarg', 'name': 'kwargs2'}]
         self.assertEqual(res['params'], exp_params)
+
+    def test_simple_class(self):
+        res = docpy.parser.parse(SimpleClass)
+        self.assertEqual(res['name'], 'SimpleClass')
+        self.assertEqual(res['type'], 'class')
+        exp_summary = 'Docstring for this class.'
+        self.assertEqual(res['summary'], exp_summary)
+        self.assertEqual(res['description'], '')
+        self.assertEqual(res['params'], [])
 
 
 class ParseDocstringTest(TestCase):

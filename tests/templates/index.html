@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+
+<link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+<style>
+.main-wrapper {
+    font-family: 'Source Code Pro';
+    background-color: #222;
+    color: #fff;
+    padding: 20px;
+    width: 650px;
+}
+
+.func-wrapper {
+    margin: 50px 10px;
+    width: 600px;
+}
+
+.func-name {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.func-summary, .func-description {
+    margin-bottom: 20px;
+}
+
+.param-table {
+    margin: 0 20px;
+    border: 1px solid #ccc;
+    background: #1a1a1a;
+    padding: 10px;
+}
+.param-wrapper table {
+    width: 90%;
+}
+.param-wrapper th {
+    border-bottom: 1px solid #ccc;
+}
+.param-wrapper td {
+    padding: 0 10px;
+}
+</style>
+
+</head>
+
+<body>
+    <div class="main-wrapper">
+        {% for func in funcs %}
+            {{ func }}
+            <hr />
+        {% endfor %}
+    </div>
+
+</body>
+</html>
+

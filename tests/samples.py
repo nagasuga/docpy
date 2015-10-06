@@ -76,3 +76,8 @@ def func_with_yaml_2(arg1, arg2, kwargs1='one', kwargs2=None):
 
 def func_without_docstring(arg1, arg2, kwargs1='one', kwargs2=None):
     pass
+
+
+class SimpleClass(object):
+    """Docstring for this class."""
+    pass
