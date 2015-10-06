@@ -4,7 +4,8 @@ from unittest import TestCase
 import yaml
 
 import docpy.parser
-from .samples import sample, func_with_yaml, func_with_yaml_2
+from .samples import (
+    sample, func_with_yaml, func_with_yaml_2, func_without_docstring)
 
 
 class ParseTest(TestCase):
@@ -67,6 +68,17 @@ class ParseTest(TestCase):
         }
         self.assertEqual(res['extra'], exp_extra)
 
+    def test_without_docstring(self):
+        res = docpy.parser.parse(func_without_docstring)
+        self.assertEqual(res['name'], 'func_without_docstring')
+        self.assertEqual(res['summary'], '')
+        self.assertEqual(res['description'], '')
+        exp_params = [{'type': 'arg', 'name': 'arg1'},
+                      {'type': 'arg', 'name': 'arg2'},
+                      {'default': 'one', 'type': 'kwarg', 'name': 'kwargs1'},
+                      {'default': None, 'type': 'kwarg', 'name': 'kwargs2'}]
+        self.assertEqual(res['params'], exp_params)
+
 
 class ParseDocstringTest(TestCase):
     @staticmethod
@@ -94,12 +106,12 @@ class ParseDocstringTest(TestCase):
 
     def test_no_docstring(self):
         docstring = self.generate_docstring()
-        self.assert_parse(docstring, summary=None, description=None)
+        self.assert_parse(docstring, summary='', description='')
 
     def test_simple_summary(self):
         summary = 'This is simple docstring.'
         docstring = self.generate_docstring(summary=summary)
-        self.assert_parse(docstring, summary=summary, description=None)
+        self.assert_parse(docstring, summary=summary, description='')
 
     def test_multiline_summary(self):
         summary = """This is sample docstring that is long that will go 
@@ -108,7 +120,7 @@ class ParseDocstringTest(TestCase):
         docstring = self.generate_docstring(summary=summary)
         exp_summary = ('This is sample docstring that is long that will go '
                        'multiline and continues here and ... on and on.')
-        self.assert_parse(docstring, summary=exp_summary, description=None)
+        self.assert_parse(docstring, summary=exp_summary, description='')
 
     def test_simple_summary_simple_description(self):
         summary = 'This is simple docstring.'
@@ -183,7 +195,7 @@ class ParseDocstringTest(TestCase):
                    """
         docstring = self.generate_docstring(raw_yaml=raw_yaml)
         exp_yaml = yaml.load(raw_yaml, Loader=yaml.Loader)
-        self.assert_parse(docstring, summary=None, description=None, yaml=exp_yaml)
+        self.assert_parse(docstring, summary='', description='', yaml=exp_yaml)
 
     def test_simple_summary_with_yaml(self):
         summary = 'This is simple docstring.'
@@ -206,7 +218,7 @@ class ParseDocstringTest(TestCase):
                    """
         docstring = self.generate_docstring(summary=summary, raw_yaml=raw_yaml)
         exp_yaml = yaml.load(raw_yaml, Loader=yaml.Loader)
-        self.assert_parse(docstring, summary=summary, description=None,
+        self.assert_parse(docstring, summary=summary, description='',
                           yaml=exp_yaml)
 
     def test_simple_summary_simple_description_with_yaml(self):

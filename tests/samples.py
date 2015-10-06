@@ -72,3 +72,7 @@ def func_with_yaml_2(arg1, arg2, kwargs1='one', kwargs2=None):
     id: 12345
     """
     pass
+
+
+def func_without_docstring(arg1, arg2, kwargs1='one', kwargs2=None):
+    pass

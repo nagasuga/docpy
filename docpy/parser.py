@@ -25,8 +25,8 @@ def parse(func):
 def parse_docstring(docstring):
     """Parse and return various information from the docstring."""
     result = {
-        'summary': None,
-        'description': None,
+        'summary': '',
+        'description': '',
         'yaml': {},
     }
 
@@ -35,7 +35,7 @@ def parse_docstring(docstring):
 
     paragraphs = docstring.split('\n\n')
 
-    description = None
+    description = ''
     desc_paragraphs = []
     found_yaml = False
     count = 0
@@ -93,7 +93,7 @@ def parse_parameters_py2(func):
             param['type'] = 'arg'
         else:
             param['type'] = 'kwarg'
-            param['default'] = argspec.defaults[kwarg_idx]
+            param['_default'] = argspec.defaults[kwarg_idx]
             kwarg_idx += 1
 
         params.append(param)
