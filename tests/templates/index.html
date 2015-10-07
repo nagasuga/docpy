@@ -4,17 +4,15 @@
 
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
 <style>
-.main-wrapper {
+body {
     font-family: 'Source Code Pro';
     background-color: #2d3134;
     color: #dde4e8;
     padding: 20px;
-    width: 650px;
 }
 
 .func-wrapper {
     margin: 50px 10px;
-    width: 600px;
 }
 
 .func-name {
@@ -27,21 +25,29 @@
     margin-bottom: 20px;
 }
 
-.param-table {
+.param-table-wrapper {
     margin: 0 20px;
     border: 1px solid #282828;
     border-radius: 7px;
     background: #272b2d;
-    padding: 10px;
+    padding: 0;
 }
+
 .param-wrapper table {
-    width: 90%;
+    width: 100%;
+    border-collapse: collapse;
+}
+.param-wrapper tr:nth-child(even) {
+    background: #242424;
+}
+.param-wrapper tr:nth-child(odd) {
 }
 .param-wrapper th {
     border-bottom: 1px solid #ccc;
 }
-.param-wrapper td {
-    padding: 0 10px;
+.param-wrapper td,
+.param-wrapper th {
+    padding: 10px;
 }
 
 h4 {
@@ -59,7 +65,5 @@ h4 {
             <hr />
         {% endfor %}
     </div>
-
 </body>
 </html>
-
