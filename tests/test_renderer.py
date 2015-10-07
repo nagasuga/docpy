@@ -19,7 +19,8 @@ class ImportFileTest(TestCase):
             set([x[0] for x in inspect.getmembers(res) \
                 if inspect.isfunction(x[1]) or inspect.isclass(x[1])]),
             set(['func_with_yaml', 'func_with_yaml_2',
-                 'func_without_docstring', 'sample', 'SimpleClass']))
+                 'func_without_docstring', 'sample', 'SimpleClass',
+                 'ClassWithInit']))
 
 
 class RenderEngineTest(TestCase):

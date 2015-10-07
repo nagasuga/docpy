@@ -6,7 +6,7 @@ import yaml
 import docpy.parser
 from .samples import (
     sample, func_with_yaml, func_with_yaml_2, func_without_docstring,
-    SimpleClass)
+    SimpleClass, ClassWithInit)
 
 
 class ParseTest(TestCase):
@@ -92,6 +92,14 @@ class ParseTest(TestCase):
         self.assertEqual(res['description'], '')
         self.assertEqual(res['params'], [])
 
+    def test_class_with_init(self):
+        res = docpy.parser.parse(SimpleClass)
+        self.assertEqual(res['name'], 'SimpleClass')
+        self.assertEqual(res['type'], 'class')
+        exp_summary = 'Docstring for this class.'
+        self.assertEqual(res['summary'], exp_summary)
+        self.assertEqual(res['description'], '')
+        self.assertEqual(res['params'], [])
 
 class ParseDocstringTest(TestCase):
     @staticmethod

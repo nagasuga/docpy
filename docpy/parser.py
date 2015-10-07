@@ -93,16 +93,27 @@ def parse_parameters_py2(func):
 
     This is for python <= 3.2"""
     params = []
-    argspec = inspect.getargspec(func)
-    kwargs_start_idx = len(argspec.args) - len(argspec.defaults)
+    if inspect.isclass(func):
+        argspec = inspect.getargspec(func.__init__) \
+            if inspect.ismethod(func.__init__) else None
+
+        if not argspec:
+            return params
+
+        args = argspec.args[1:]  # skip "self"
+    else:
+        argspec = inspect.getargspec(func)
+        args = argspec.args
+
+    kwargs_start_idx = len(args) - len(argspec.defaults or [])
     kwarg_idx = 0
-    for idx, arg_name in enumerate(argspec.args):
+    for idx, arg_name in enumerate(args):
         param = {'name': arg_name}
         if idx < kwargs_start_idx:
             param['type'] = 'arg'
         else:
             param['type'] = 'kwarg'
-            param['_default'] = argspec.defaults[kwarg_idx]
+            param['default'] = argspec.defaults[kwarg_idx]
             kwarg_idx += 1
 
         params.append(param)

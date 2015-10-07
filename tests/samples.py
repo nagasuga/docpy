@@ -81,3 +81,9 @@ def func_without_docstring(arg1, arg2, kwargs1='one', kwargs2=None):
 class SimpleClass(object):
     """Docstring for this class."""
     pass
+
+
+class ClassWithInit(object):
+    """This class contains __init__."""
+    def __init__(self):
+        pass
