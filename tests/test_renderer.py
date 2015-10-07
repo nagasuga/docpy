@@ -29,6 +29,7 @@ class RenderEngineTest(TestCase):
         renderer = docpy.renderer.RenderEngine('tests/templates/func.html')
         res = renderer.render_docstring(docpy.parser.parse(func_with_yaml))
 
+    @skip('WIP')
     def test_render_file(self):
         renderer = docpy.renderer.RenderEngine('tests/templates/func.html')
         res = renderer.render_file('tests/samples.py')
