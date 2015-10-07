@@ -5,8 +5,9 @@ python:
   - nightly
 install:
   - pip install pytest
-  - pip install pyyaml
   - pip install coveralls
+  - pip install pyyaml
+  - pip install jinja2
 script:
   make test.report
 after_success:
