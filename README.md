@@ -7,6 +7,33 @@
 Python documentation generator using docstrings
 
 
+# Renderer
+
+Allows the user to render a single function/class/file and returns a html documentation using a given template.
+
+## Usage
+
+1. Import
+
+    import some_function
+    import docpy.renderer
+
+2. Render a function
+
+    template_path = 'tests/templates/func.html'
+    renderer = docpy.renderer.RenderEngine(template_path)
+    res = renderer.render_docstring(docpy.parser.parse(some_function))
+
+2. Render a file
+
+    template_path = 'tests/templates/func.html'
+    renderer = docpy.renderer.RenderEngine(template_path)
+    res = renderer.render_file('tests/samples.py')
+    renderer.template = 'tests/templates/index.html'
+    res = renderer.render(context={'funcs': res})
+    print(res)
+
+
 # Parser
 
 1. Have a sample function with docstring to parse the information for documentation.
@@ -104,3 +131,9 @@ Python documentation generator using docstrings
 
     }
     ```
+
+
+# TODO
+
+* renderer.render_file should return html, not a list of docs
+* rather than taking individual template paths, allow to set template dir which contains the "<object type>.html" to select the template dynamically
