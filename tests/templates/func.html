@@ -3,6 +3,7 @@
     <div class="func-summary">{{ func.summary }}</div>
     <div class="func-description">{{ func.description }}</div>
 
+    {% if func.params %}
     <div class="param-wrapper">
         <h4>Parameters</h4>
         <div class="param-table-wrapper">
@@ -16,32 +17,31 @@
                 {% for param in func.params %}
                 <tr class="param-name">
                     <td>{{ param.name }}</td>
+                    <td>
                     {% if param.type == 'kwarg' %}
-                        <td>
-                            {% if param.default %}
-                                {{ param.default }}
-                            {% else %}
-                                None
-                            {% endif %}
-                        </td>
-                    {% else %}
-                        <td></td>
+                        {% if param.default %}
+                            {{ param.default }}
+                        {% else %}
+                            None
+                        {% endif %}
                     {% endif %}
+                    </td>
 
+                    <td>
                     {% if "type" in param.extra %}
-                        <td>{{ param.extra.type }}</td>
-                    {% else %}
-                        <td></td>
+                        {{ param.extra.type }}
                     {% endif %}
+                    </td>
 
+                    <td>
                     {% if "description" in param.extra %}
-                        <td>{{ param.extra.description }}</td>
-                    {% else %}
-                        <td></td>
+                        {{ param.extra.description }}
                     {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
         </div>
-    </div>
+    </div>  <!-- end param-wrapper -->
+    {% endif %}
 </div>
