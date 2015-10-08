@@ -18,7 +18,6 @@ Allows the user to render a single function/class/file and returns a html docume
     ```
     import some_function
     import docpy.renderer
-
     ```
 
 2. Render a function
@@ -28,7 +27,6 @@ Allows the user to render a single function/class/file and returns a html docume
     template_path = 'tests/templates/func.html'
     renderer = docpy.renderer.RenderEngine(template_path)
     res = renderer.render_docstring(docpy.parser.parse(some_function))
-
     ```
 
 2. Render a file
@@ -41,7 +39,6 @@ Allows the user to render a single function/class/file and returns a html docume
     renderer.template = 'tests/templates/index.html'
     res = renderer.render(context={'funcs': res})
     print(res)
-
     ```
 
 
