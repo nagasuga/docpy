@@ -1,4 +1,5 @@
 import inspect
+import six
 from unittest import TestCase, skip
 
 import docpy.parser
@@ -27,9 +28,9 @@ class RenderEngineTest(TestCase):
     def test_render_docstring(self):
         renderer = docpy.renderer.RenderEngine('templates')
         res = renderer.render_docstring(docpy.parser.parse(func_with_yaml))
-        self.assertIsInstance(res, str)
+        self.assertIsInstance(res, six.string_types)
 
     def test_render_file(self):
         renderer = docpy.renderer.RenderEngine('templates')
         res = renderer.render_file('tests/samples.py')
-        self.assertIsInstance(res, str)
+        self.assertIsInstance(res, six.string_types)
