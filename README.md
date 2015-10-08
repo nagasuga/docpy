@@ -15,23 +15,34 @@ Allows the user to render a single function/class/file and returns a html docume
 
 1. Import
 
+    ```
     import some_function
     import docpy.renderer
 
+    ```
+
 2. Render a function
 
+
+    ```
     template_path = 'tests/templates/func.html'
     renderer = docpy.renderer.RenderEngine(template_path)
     res = renderer.render_docstring(docpy.parser.parse(some_function))
 
+    ```
+
 2. Render a file
 
+
+    ```
     template_path = 'tests/templates/func.html'
     renderer = docpy.renderer.RenderEngine(template_path)
     res = renderer.render_file('tests/samples.py')
     renderer.template = 'tests/templates/index.html'
     res = renderer.render(context={'funcs': res})
     print(res)
+
+    ```
 
 
 # Parser
