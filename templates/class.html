@@ -1,0 +1,47 @@
+<div class="func-wrapper">
+    <div class="func-name">{{ obj_data.type }} {{ obj_data.name }}()</div>
+    <div class="func-summary">{{ obj_data.summary }}</div>
+    <div class="func-description">{{ obj_data.description }}</div>
+
+    {% if obj_data.params %}
+    <div class="param-wrapper">
+        <h4>Parameters</h4>
+        <div class="param-table-wrapper">
+            <table class="param-table">
+                <tr>
+                    <th>Name</th>
+                    <th>Default</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+                {% for param in obj_data.params %}
+                <tr class="param-name">
+                    <td>{{ param.name }}</td>
+                    <td>
+                    {% if param.type == 'kwarg' %}
+                        {% if param.default %}
+                            {{ param.default }}
+                        {% else %}
+                            None
+                        {% endif %}
+                    {% endif %}
+                    </td>
+
+                    <td>
+                    {% if "type" in param.extra %}
+                        {{ param.extra.type }}
+                    {% endif %}
+                    </td>
+
+                    <td>
+                    {% if "description" in param.extra %}
+                        {{ param.extra.description }}
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>  <!-- end param-wrapper -->
+    {% endif %}
+</div>

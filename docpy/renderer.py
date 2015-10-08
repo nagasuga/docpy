@@ -1,5 +1,4 @@
 import inspect
-import os
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -16,21 +15,12 @@ def import_file(file_path):
 class RenderEngine(object):
     """Render engine to convert python to documentation."""
 
-    def __init__(self, template_path=None):
-        self._template = None
-        self.template = template_path if template_path else None
+    def __init__(self, template_dir):
+        self.template_dir = template_dir
 
-    @property
-    def template(self):
-        return self._template
-
-    @template.setter
-    def template(self, template_path):
-        tmpl_split = template_path.split('/')
-        template_dir = os.path.join(*tmpl_split[:-1])
-        template_file = tmpl_split[-1]
-        env = Environment(loader=FileSystemLoader(template_dir))
-        self._template = env.get_template(template_file)
+    def get_template(self, obj_type):
+        env = Environment(loader=FileSystemLoader(self.template_dir))
+        return env.get_template('{}.html'.format(obj_type))
 
     def render_docstring(self, docstring_data):
         """Uses the docstring_data (list) generated from the parser to render
@@ -43,18 +33,18 @@ class RenderEngine(object):
 
         docstring_data['description'] = docstring_data['description']\
             .replace('\n', '<br />')
-        return self.render(context={'func': docstring_data})
+
+        template = self.get_template(obj_type=docstring_data['type'])
+        return template.render(obj_data=docstring_data)
 
     def render_file(self, file_path):
         """Renders html (string) of the given file with all the def/class
         contained."""
 
+        obj_datas = []
         module = import_file(file_path)
-        funcs = [x[1] for x in inspect.getmembers(module) \
-            if inspect.isfunction(x[1]) or inspect.isclass(x[1])]
-        return [self.render_docstring(parser.parse(func)) for func in funcs]
-
-    def render(self, context):
-        """Render the template to html (string) passing context (dict) to
-        the template."""
-        return self.template.render(**context)
+        for _, obj in inspect.getmembers(module):
+            if inspect.isclass(obj) or inspect.isfunction(obj):
+                obj_datas.append(self.render_docstring(parser.parse(obj)))
+        template = self.get_template(obj_type=type(module).__name__)
+        return template.render(obj_datas=obj_datas)

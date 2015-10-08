@@ -24,20 +24,12 @@ class ImportFileTest(TestCase):
 
 
 class RenderEngineTest(TestCase):
-    @skip('WIP')
     def test_render_docstring(self):
-        from jinja2.compiler import find_undeclared, Frame
-        renderer = docpy.renderer.RenderEngine('tests/templates/func.html')
+        renderer = docpy.renderer.RenderEngine('templates')
         res = renderer.render_docstring(docpy.parser.parse(func_with_yaml))
+        self.assertIsInstance(res, str)
 
-    @skip('WIP')
     def test_render_file(self):
-        renderer = docpy.renderer.RenderEngine('tests/templates/func.html')
+        renderer = docpy.renderer.RenderEngine('templates')
         res = renderer.render_file('tests/samples.py')
-        print(res)
-
-        renderer.template = 'tests/templates/index.html'
-        res = renderer.render(context={'funcs': res})
-        f_obj = open('xxx.html', 'w')
-        f_obj.write(res)
-        f_obj.close()
+        self.assertIsInstance(res, str)

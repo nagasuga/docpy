@@ -5,26 +5,21 @@ import textwrap
 import yaml
 
 
-def parse(func):
+def parse(obj):
     """Returns parsed docstring in dict."""
 
-    obj_type = 'unknown'
-    if inspect.isfunction(func):
-        obj_type = 'function'
-    elif inspect.isclass(func):
-        obj_type = 'class'
-    elif inspect.ismethod(func):
-        obj_type = 'method'
+    type_name = type(obj).__name__
+    obj_type = 'class' if type_name == 'type' else type_name
 
     result = {
         'raw': {
-            'docstring': func.__doc__,
+            'docstring': obj.__doc__,
         },
-        'name': func.__name__,
-        'params': parse_parameters(func),
+        'name': obj.__name__,
+        'params': parse_parameters(obj),
         'type': obj_type,
     }
-    docstring = parse_docstring(docstring=inspect.getdoc(func))
+    docstring = parse_docstring(docstring=inspect.getdoc(obj))
     result['extra'] = docstring['yaml']
     del docstring['yaml']
     result.update(docstring)
@@ -88,21 +83,21 @@ def parse_parameters_py3(func):
     return params
 
 
-def parse_parameters_py2(func):
-    """Parse and returns a list of dict about the parameters of func.
+def parse_parameters_py2(obj):
+    """Parse and returns a list of dict about the parameters of obj.
 
     This is for python <= 3.2"""
     params = []
-    if inspect.isclass(func):
-        argspec = inspect.getargspec(func.__init__) \
-            if inspect.ismethod(func.__init__) else None
+    if inspect.isclass(obj):
+        argspec = inspect.getargspec(obj.__init__) \
+            if inspect.ismethod(obj.__init__) else None
 
         if not argspec:
             return params
 
         args = argspec.args[1:]  # skip "self"
     else:
-        argspec = inspect.getargspec(func)
+        argspec = inspect.getargspec(obj)
         args = argspec.args
 
     kwargs_start_idx = len(args) - len(argspec.defaults or [])
