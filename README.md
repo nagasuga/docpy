@@ -145,3 +145,4 @@ Allows the user to render a single function/class/file and returns a html docume
 
 * renderer.render_file should return html, not a list of docs
 * rather than taking individual template paths, allow to set template dir which contains the "<object type>.html" to select the template dynamically
+* write CLI to initiate rendering
