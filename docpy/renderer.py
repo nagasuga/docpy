@@ -1,4 +1,6 @@
+import fnmatch
 import inspect
+import os
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -48,3 +50,15 @@ class RenderEngine(object):
                 obj_datas.append(self.render_docstring(parser.parse(obj)))
         template = self.get_template(obj_type=type(module).__name__)
         return template.render(obj_datas=obj_datas)
+
+    def render_directory(self, root_dir, recursive=False):
+        """Renders htmls (string) of the each files within the given
+        directory of all the def/class contained."""
+
+        html_by_paths = {}
+        for root, dirnames, filenames in os.walk(root_dir):
+            for filename in fnmatch.filter(filenames, '*.py'):
+                file_path = os.path.join(root, filename)
+                html = self.render_file(file_path)
+                html_by_paths[file_path] = html
+        return html_by_paths
